@@ -7,6 +7,8 @@ import Products from './components/entity/product/Products';
 import Login from './components/Login';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+import Cart from './components/Cart';
+import Checkout from './components/Checkout';
 import AdminProducts from './components/admin/AdminProducts';
 import { useTheme } from './context/ThemeContext';
 
@@ -25,6 +27,8 @@ function ThemedApp() {
             <Route path="/products" element={<Products />} />
             <Route path="/login" element={<Login />} />
             <Route path="/admin/products" element={<AdminProducts />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
           </Routes>
         </main>
         <Footer />

@@ -11,8 +11,9 @@
         "playwright": {
             "command": "npx",
             "args": [
+                "-y",
                 "@playwright/mcp@latest",
-                "--browser=msedge"
+                "--browser=chromium"
             ]
         },
         "github": {
