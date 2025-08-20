@@ -1,5 +1,5 @@
 import Slider from 'react-slick';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 
@@ -7,6 +7,11 @@ export default function Welcome() {
   const sliderRef = useRef<Slider | null>(null);
   const { darkMode } = useTheme();
   const navigate = useNavigate();
+
+  const [showModal, setShowModal] = useState(true);
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
 
   const sliderSettings = {
     dots: true,
@@ -38,8 +43,64 @@ export default function Welcome() {
     ]
   };
 
+  useEffect(() => {
+    setShowModal(true);
+  }, []);
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    setError('');
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+    setSubmitted(true);
+    setTimeout(() => setShowModal(false), 1200);
+  };
+
   return (
     <div className={`relative ${darkMode ? 'bg-dark text-light' : 'bg-white text-gray-800'} transition-colors duration-300`}>
+      {/* Modal Popup for Email Subscription */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className={`bg-white dark:bg-gray-900 rounded-xl shadow-lg p-8 w-full max-w-md mx-4 relative`}>
+            <button
+              className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 dark:hover:text-white text-2xl"
+              onClick={() => setShowModal(false)}
+              aria-label="Close"
+            >
+              &times;
+            </button>
+            <h2 className="text-2xl font-bold mb-2 text-center text-primary">Stay in the Loop!</h2>
+            <p className="mb-4 text-center text-gray-600 dark:text-gray-300">Subscribe to get updates about new smart cat products and offers.</p>
+            {submitted ? (
+              <div className="text-green-600 text-center font-semibold py-4">Thank you for subscribing!</div>
+            ) : (
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={handleEmailChange}
+                  placeholder="Your email address"
+                  className="border border-gray-300 dark:border-gray-700 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                  required
+                />
+                {error && <div className="text-red-500 text-sm">{error}</div>}
+                <button
+                  type="submit"
+                  className="bg-primary hover:bg-accent text-white px-6 py-2 rounded-md font-medium transition-colors"
+                >
+                  Subscribe
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
       {/* Content */}
       <div className="relative px-4 sm:px-6 lg:px-8 pt-8">
         <div className="relative py-4">
